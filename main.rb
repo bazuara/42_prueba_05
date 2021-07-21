@@ -57,4 +57,14 @@ get '/user/:user/skills' do
 end
 
 #3rd Endpoint: School record of a student (an extraction of all personal projects marks of the user)
-#get '/user/:id/record' 
+get '/user/:user/record' do
+  content_type :json
+  user_info = token.get("/v2/users/#{params[:user]}").parsed
+  score = Hash.new
+  user_info['projects_users'].each do |project|
+    p "#{project['project']['name']} #{project['final_mark']}"
+    score.store(project['project']['name'], project['final_mark'])
+  end
+  JSON.generate(score)
+
+end
