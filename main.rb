@@ -15,23 +15,36 @@ end
 
 client = OAuth2::Client.new(client_id, client_secret, site: "https://api.intra.42.fr")
 token = client.client_credentials.get_token
-#1st Endpoint: Retrieve all personal information of the user
 
-get '/user/:user/info' do
-  content_type :json
-  #"#{params[:user]}"
-  user_info = token.get("/v2/users/#{params[:user]}").parsed
-  return_info = JSON.generate(user_info)
-  #return_info = user_info.generate
-  return_info
-end
-
+#testing
 get '/' do
   "Hello World!"
 end
 
+#1st Endpoint: Retrieve all personal information of the user
+get '/user/:user/info' do
+  content_type :json
+  user_info = token.get("/v2/users/#{params[:user]}").parsed
+  refined_info = Hash.new
+  refined_info = {
+    "Name" => user_info['first_name'],
+    "Last name" =>user_info['last_name'],
+    "Usual full name" => user_info['usual_full_name'],
+    "Pool month": user_info['pool_month'],
+    "Pool year": user_info['pool_year']
+  }
+
+  return_info = JSON.generate(refined_info)
+  return_info
+end
+
+
 #2nd Endpoint: Retrieve all skills and expertises of the user
-#get '/user/:id/skills'
+get '/user/:id/skills' do
+  content_type :json
+  user_info = token.get("/v2/users/#{params[:user]}").parsed
+  
+end
 
 #3rd Endpoint: School record of a student (an extraction of all personal projects marks of the user)
 #get '/user/:id/record' 
