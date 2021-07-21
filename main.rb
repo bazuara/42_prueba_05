@@ -3,6 +3,7 @@
 require 'sinatra'
 require 'yaml'
 require 'oauth2'
+require 'json'
 
 begin
   config = YAML.load_file("secret.credentials.yml")
