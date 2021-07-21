@@ -35,15 +35,25 @@ get '/user/:user/info' do
   }
 
   return_info = JSON.generate(refined_info)
-  return_info
 end
 
 
 #2nd Endpoint: Retrieve all skills and expertises of the user
-get '/user/:id/skills' do
+get '/user/:user/skills' do
   content_type :json
   user_info = token.get("/v2/users/#{params[:user]}").parsed
-  
+  refined_skills = Hash.new
+  user_info['cursus_users'].each do |cursus|
+    p "looping through cursus #{cursus['cursus_id']}"
+    cursus_skills = Hash.new
+    cursus['skills'].each do |skill|
+      p "looping through skills #{skill['name']}"
+      #p str = "#{skill['name']}: '#{skill['level']}'"
+      cursus_skills.store("#{skill['name']} from cursus id_#{cursus['cursus_id']}", skill['level'])
+    end
+    refined_skills.store("cursus_id #{cursus['cursus_id']}", cursus_skills)
+  end
+  return_info = JSON.generate(refined_skills)
 end
 
 #3rd Endpoint: School record of a student (an extraction of all personal projects marks of the user)
